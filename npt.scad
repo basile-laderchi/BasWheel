@@ -8,14 +8,14 @@
 // spoke_count
 // spoke_thickness
 // spoke_type (double_left, double_right, left, right)
-tire(60, 2, 10, 3, "M3", 1, 1, 6, 1, "left", $fn=360);
+tire(60, 2, 10, 3, "M3", 1, 1, 6, 1, "left", $fn=100);
 
 /*
  * NPT (Non Pneymatic Tire) v1.05
  *
  * by Basile Laderchi
  *
- * Licenced under Creative Commons Attribution - Non-Commercial - Share Alike 3.0
+ * Licenced under Creative Commons Attribution-ShareAlike 3.0 Unported http://creativecommons.org/licenses/by-sa/3.0/
  *
  * v 1.05, 27 May 2013: $fn deleted from file and included in function call
  * v 1.04, 24 May 2013: Added spoke_type "double_right", changed "both" to "double_left"
@@ -26,7 +26,7 @@ tire(60, 2, 10, 3, "M3", 1, 1, 6, 1, "left", $fn=360);
  *
  * notes:
  * Servo horn attachment
- * a disk that screws to the servo horn then a tube that sips over the hub which is kept inplace my the M3 screw
+ * a disk that screws to the servo horn then a tube that sips over the hub which is kept inplace my the M3 scre
  * 
  */
 
@@ -34,7 +34,7 @@ tire(60, 2, 10, 3, "M3", 1, 1, 6, 1, "left", $fn=360);
 use <Libs.scad>
 
 module tire(outer_diameter, outer_thickness, height, hub_diameter, hub_screw_size, rim_width, rim_height, spoke_count, spoke_thickness, spoke_type) {
-  outer_radius = outer_diameter / 2;
+	outer_radius = outer_diameter / 2;
 	hub_radius = hub_diameter / 2	;
 	hub_thickness = tableEntry (hub_screw_size, "nutThickness") * 2;
 	hub_outer_radius = hub_radius + hub_thickness;
