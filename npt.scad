@@ -15,7 +15,7 @@ tire(60, 2, 10, 3, "M3", 1, 1, 6, 1, "left", $fn=100);
  *
  * by Basile Laderchi
  *
- * Licenced under Creative Commons Attribution-ShareAlike 3.0 Unported http://creativecommons.org/licenses/by-sa/3.0/
+ * Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported http://creativecommons.org/licenses/by-sa/3.0/
  *
  * v 1.05, 27 May 2013: $fn deleted from file and included in function call
  * v 1.04, 24 May 2013: Added spoke_type "double_right", changed "both" to "double_left"
