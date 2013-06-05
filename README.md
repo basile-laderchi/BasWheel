@@ -1,10 +1,10 @@
-OpenSCAD Non Pneumatic Tire v1.07
+OpenSCAD Non Pneumatic Tire v1.08
 =================================
-
 Loosely based on http://www.thingiverse.com/thing:21486 and http://www.thingiverse.com/thing:17514
 
 The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed.
 
+v 1.08, 5 June 2013: Added support from spoke to wheel
 v 1.07, 31 May 2013: Fix servo hub (added a small distance between the main hub and the servo hub)
 v 1.06, 29 May 2013: Added servo hub
 v 1.05, 27 May 2013: $fn deleted from file and included in function call
