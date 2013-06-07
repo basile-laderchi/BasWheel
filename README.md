@@ -1,9 +1,13 @@
-OpenSCAD Non Pneumatic Tire v1.08
+OpenSCAD Non Pneumatic Tire v1.09
 =================================
-Loosely based on http://www.thingiverse.com/thing:21486 and http://www.thingiverse.com/thing:17514
+Notice: LEGO Technic axle compatibility not tested. 
 
-The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed.
+Idea from http://www.thingiverse.com/thing:21486 and http://www.thingiverse.com/thing:17514
 
+The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (not included)
+The Lego axle size 2 from (http://www.thingiverse.com/thing:66884) is needed. (not included)
+
+v 1.09, 6 June 2013: Added hub_type "lego" and added all the variables on top of the file (Customizer ready - not working yet due to imported libraries and external stl file)
 v 1.08, 5 June 2013: Added support from spoke to wheel
 v 1.07, 31 May 2013: Fix servo hub (added a small distance between the main hub and the servo hub)
 v 1.06, 29 May 2013: Added servo hub
