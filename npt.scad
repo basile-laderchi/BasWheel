@@ -15,7 +15,7 @@ spoke_thickness = 1;
 spoke_support = 25; // (angle between 5 an 85 degrees)
 
 /*
- * NPT (Non Pneumatic Tire / Airless Tire v1.09) v1.09
+ * NPT (Non Pneumatic Tire / Airless Tire) v1.09
  *
  * by Basile Laderchi
  *
