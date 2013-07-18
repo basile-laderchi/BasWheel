@@ -2,7 +2,7 @@ OpenSCAD BasWheel (Non Pneumatic Tire / Airless Tire) v1.13
 =================================
 Notice: LEGO Technic axle compatibility not tested. 
 
-Idea from http://www.thingiverse.com/thing:21486 and http://www.thingiverse.com/thing:17514
+Ideas from http://www.thingiverse.com/thing:21486, http://www.thingiverse.com/thing:17514 and http://www.thingiverse.com/thing:5713
 
 The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (not included)
 The Lego axle size 2 from (http://www.thingiverse.com/thing:66884) is needed. (not included)
