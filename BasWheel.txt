@@ -20,5 +20,4 @@ jinx: "I NEVER GONNA BUY ANOTHER WHEEL" from now on, thx to your work
 notes:
 outer_thickness 1 rim_width .7 spoke_count 9 spoke_thickness .9
 detachable servohub
-holes in the servohub for magnets
 holes in the outer ring

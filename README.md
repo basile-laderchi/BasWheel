@@ -1,5 +1,5 @@
-OpenSCAD BasWheel (Non Pneumatic Tire / Airless Tire) v1.13
-=================================
+BasWheel
+================================================================================
 Notice: LEGO Technic axle compatibility not tested. 
 
 Ideas from http://www.thingiverse.com/thing:21486, http://www.thingiverse.com/thing:17514 and http://www.thingiverse.com/thing:5713
@@ -7,6 +7,7 @@ Ideas from http://www.thingiverse.com/thing:21486, http://www.thingiverse.com/th
 The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (not included)
 The Lego axle size 2 from (http://www.thingiverse.com/thing:66884) is needed. (not included)
 
+v 1.14, 23 July 2013 : Added magnet_diameter (used if you need holes for neodymium magnets on the servo_hub) and magnet_offset parameters
 v 1.13, 18 July 2013 : Added hub_type "no" used for push-fit axles
 v 1.12, 18 July 2013 : Added spoke_type "spring", spring_segments variable, changed "double_left" to "spiral_left_double", "double_right" to "spiral_right_double", "left" to "spiral_left" and "right" to "spiral_right"
 v 1.11, 19 June 2013 : Added small spacing between double spokes

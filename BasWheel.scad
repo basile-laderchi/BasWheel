@@ -7,6 +7,8 @@ hub_thickness = 5;
 servo_hub_extra_height = 2;
 servo_hole_count = 6;
 servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
 rim_width = 1;
 rim_height = 1;
 spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
@@ -16,12 +18,13 @@ spoke_support = 25; // (angle between 5 an 85 degrees)
 spring_segments = 6;
 
 /*
- * BasWheel (Non Pneumatic Tire / Airless Tire) v1.13
+ * BasWheel v1.14
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported http://creativecommons.org/licenses/by-sa/3.0/
  *
+ * v 1.14, 23 July 2013 : Added magnet_diameter (used if you need holes for neodymium magnets on the servo_hub) and magnet_offset parameters
  * v 1.13, 18 July 2013 : Added hub_type "no" used for push-fit axles
  * v 1.12, 18 July 2013 : Added spoke_type "spring", spring_segments variable, changed "double_left" to "spiral_left_double", "double_right" to "spiral_right_double", "left" to "spiral_left" and "right" to "spiral_right"
  * v 1.11, 19 June 2013 : Added small spacing between double spokes
@@ -39,16 +42,17 @@ spring_segments = 6;
  *
  */
 
-tire(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
+tire(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
 
 // http://www.thingiverse.com/thing:6021
 use <Libs.scad>
 use <MCAD/triangles.scad>
 use <MCAD/2Dshapes.scad>
 
-module tire(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
+module tire(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
 	outer_radius = outer_diameter / 2;
 	hub_radius = hub_diameter / 2;
+	magnet_radius = magnet_diameter / 2;
 	hub_screw_thickness = tableEntry(hub_type, "nutThickness") * 2;
 	hub_screw_outer_radius = hub_radius + hub_screw_thickness;
 	hub_other_outer_radius = hub_radius + hub_thickness;
@@ -56,10 +60,10 @@ module tire(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub
 
 	union() {
 		if (hub_type == "servo" || hub_type == "lego" || hub_type == "no") {
-			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, height);
+			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, height, magnet_offset, magnet_radius);
 			spokes(spoke_type, hub_other_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
 		} else if (tableRow(hub_type) != -1) {
-			hub(hub_type, hub_radius, hub_screw_thickness, 0, servo_hole_count, servo_attachment_height, height);
+			hub(hub_type, hub_radius, hub_screw_thickness, 0, servo_hole_count, servo_attachment_height, height, 0);
 			spokes(spoke_type, hub_screw_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
 		}
 		ring(outer_radius, outer_thickness, height);
@@ -67,8 +71,13 @@ module tire(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub
 	}
 }
 
-module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height) {
+module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius) {
 	padding = 1;
+	servo_outer_radius = 18;
+
+	lego_piece_height = 15.6;
+	lego_piece_size = 4.72;
+	lego_piece_size_new = 4.85;
 
 	radius = inner_radius + thickness;
 	height = tire_height + tableEntry(type, "headDiameter") + 0.5;
@@ -76,14 +85,10 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 	upper_nut_z = (height - tire_height) / 2 + hole_z;
 	nut_x = radius - thickness + 0.5;
 
-	lego_piece_height = 15.6;
-	lego_piece_size = 4.72;
-	lego_piece_size_new = 4.85;
-
 	if (type == "servo") {
 		union() {
 			ring(radius, thickness, tire_height);
-			servoHub(radius, inner_radius, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height);
+			servoHub(servo_outer_radius, radius, inner_radius, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius);
 		}
 	} else if (type == "lego") {
 		difference() {
@@ -127,7 +132,26 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 	}
 }
 
-module servoHub(radius, inner_radius, extra_height, hole_count, attachment_height, tire_height) {
+module servoHub(outer_radius, radius, inner_radius, extra_height, hole_count, attachment_height, tire_height, magnet_offset, magnet_radius) {
+	padding = 0.1;
+
+	if (magnet_radius > 0) {
+		difference() {
+			servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, attachment_height, tire_height);
+			for (i = [0 : hole_count - 1]) {
+				rotate([0, 0, i * 360 / hole_count + (360 / hole_count / 2)]) {
+					translate([0, outer_radius - magnet_radius - magnet_offset, tire_height / 2 + extra_height - padding]) {
+						cylinder(r=magnet_radius, h=attachment_height + padding * 2);
+					}
+				}
+			}
+		}
+	} else {
+		servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, attachment_height, tire_height);
+	}
+}
+
+module servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, attachment_height, tire_height) {
 	padding = 0.1;
 
 	translate([0, 0, tire_height / 2]) {
@@ -135,7 +159,7 @@ module servoHub(radius, inner_radius, extra_height, hole_count, attachment_heigh
 			union() {
 				cylinder(r=radius, h=extra_height);
 				translate([0, 0, extra_height]) {
-					cylinder(r=18, h=attachment_height);
+					cylinder(r=outer_radius, h=attachment_height);
 				}
 			}
 			translate([0, 0, -padding]) {
