@@ -1,4 +1,4 @@
-BasWheel [![Project Status](https://stillmaintained.com/basile-laderchi/BasWheel.png)](https://stillmaintained.com/basile-laderchi/BasWheel)
+BasWheel [![Project Status](http://stillmaintained.com/basile-laderchi/BasWheel.png)](http://stillmaintained.com/basile-laderchi/BasWheel)
 ========
 Notice: LEGO Technic axle compatibility not tested. 
 
