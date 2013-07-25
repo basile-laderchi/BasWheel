@@ -18,6 +18,7 @@ spoke_support = 25; // (angle between 5 an 85 degrees)
 spring_segments = 6;
 
 /*
+ *
  * BasWheel v1.14
  *
  * by Basile Laderchi
@@ -42,14 +43,13 @@ spring_segments = 6;
  *
  */
 
-tire(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
+basWheel(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
 
-// http://www.thingiverse.com/thing:6021
-use <Libs.scad>
+use <Libs.scad> // http://www.thingiverse.com/thing:6021
 use <MCAD/triangles.scad>
 use <MCAD/2Dshapes.scad>
 
-module tire(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
+module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
 	outer_radius = outer_diameter / 2;
 	hub_radius = hub_diameter / 2;
 	magnet_radius = magnet_diameter / 2;
