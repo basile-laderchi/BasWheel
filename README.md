@@ -1,6 +1,6 @@
 BasWheel [![Project Status](http://stillmaintained.com/basile-laderchi/BasWheel.png)](http://stillmaintained.com/basile-laderchi/BasWheel)
 ========
-Notice: LEGO Technic axle compatibility not tested. 
+LEGO Technic axle compatibility tested out ok by Gareth Chiprobot (http://letsmakerobots.com/user/2941, http://www.thingiverse.com/Chiprobot).
 
 Ideas from http://www.thingiverse.com/thing:21486, http://www.thingiverse.com/thing:17514 and http://www.thingiverse.com/thing:5713
 
