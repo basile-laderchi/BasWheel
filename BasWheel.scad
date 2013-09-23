@@ -1,7 +1,7 @@
 outer_diameter = 60;
 outer_thickness = 1;
 wheel_height = 10;
-hub_type = "servo"; // (servo, lego, no, screw_size)
+hub_type = "servohead"; // (servo, servohead, lego, no, screw_size)
 hub_diameter = 5;
 hub_thickness = 5;
 servo_hub_extra_height = 2;
@@ -19,27 +19,28 @@ spring_segments = 6;
 
 /*
  *
- * BasWheel v1.14
+ * BasWheel v1.15
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported http://creativecommons.org/licenses/by-sa/3.0/
  *
- * v 1.14, 23 July 2013 : Added magnet_diameter (used if you need holes for neodymium magnets on the servo_hub) and magnet_offset parameters
- * v 1.13, 18 July 2013 : Added hub_type "no" used for push-fit axles
- * v 1.12, 18 July 2013 : Added spoke_type "spring", spring_segments variable, changed "double_left" to "spiral_left_double", "double_right" to "spiral_right_double", "left" to "spiral_left" and "right" to "spiral_right"
- * v 1.11, 19 June 2013 : Added small spacing between double spokes
- * v 1.10, 18 June 2013 : Fixed hub high for the screw to be able to be bolted
- * v 1.09,  6 June 2013 : Added hub_type "lego" and added all the variables on top of the file (Customizer ready - not working yet due to imported libraries and external stl file)
- * v 1.08,  5 June 2013 : Added support from spoke to wheel
- * v 1.07, 31  May 2013 : Fix servo hub (added a small distance between the main hub and the servo hub)
- * v 1.06, 29  May 2013 : Added servo hub
- * v 1.05, 27  May 2013 : $fn deleted from file and included in function call
- * v 1.04, 24  May 2013 : Added spoke_type "double_right", changed "both" to "double_left"
- * v 1.03, 23  May 2013 : Added parameter screw_size and calculation of hub based on it
- * v 1.02, 22  May 2013 : Screw shaft
- * v 1.01, 21  May 2013 : Rim added
- * v 1.00, 20  May 2013 : Initial release
+ * v 1.15, 18 Sep 2013 : Added hub_type "servohead"
+ * v 1.14, 23 Jul 2013 : Added magnet_diameter (used if you need holes for neodymium magnets on the servo_hub) and magnet_offset parameters
+ * v 1.13, 18 Jul 2013 : Added hub_type "no" used for push-fit axles
+ * v 1.12, 18 Jul 2013 : Added spoke_type "spring", spring_segments variable, changed "double_left" to "spiral_left_double", "double_right" to "spiral_right_double", "left" to "spiral_left" and "right" to "spiral_right"
+ * v 1.11, 19 Jun 2013 : Added small spacing between double spokes
+ * v 1.10, 18 Jun 2013 : Fixed hub high for the screw to be able to be bolted
+ * v 1.09,  6 Jun 2013 : Added hub_type "lego" and added all the variables on top of the file (Customizer ready - not working yet due to imported libraries and external stl file)
+ * v 1.08,  5 Jun 2013 : Added support from spoke to wheel
+ * v 1.07, 31 May 2013 : Fix servo hub (added a small distance between the main hub and the servo hub)
+ * v 1.06, 29 May 2013 : Added servo hub
+ * v 1.05, 27 May 2013 : $fn deleted from file and included in function call
+ * v 1.04, 24 May 2013 : Added spoke_type "double_right", changed "both" to "double_left"
+ * v 1.03, 23 May 2013 : Added parameter screw_size and calculation of hub based on it
+ * v 1.02, 22 May 2013 : Screw shaft
+ * v 1.01, 21 May 2013 : Rim added
+ * v 1.00, 20 May 2013 : Initial release
  *
  */
 
@@ -59,12 +60,12 @@ module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter,
 	spoke_outer_radius = outer_radius - max((outer_thickness - spoke_thickness), 0);
 
 	union() {
-		if (hub_type == "servo" || hub_type == "lego" || hub_type == "no") {
-			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, height, magnet_offset, magnet_radius);
-			spokes(spoke_type, hub_other_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
-		} else if (tableRow(hub_type) != -1) {
+		if (tableRow(hub_type) != -1) {
 			hub(hub_type, hub_radius, hub_screw_thickness, 0, servo_hole_count, servo_attachment_height, height, 0);
 			spokes(spoke_type, hub_screw_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
+		} else {
+			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, height, magnet_offset, magnet_radius);
+			spokes(spoke_type, hub_other_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
 		}
 		ring(outer_radius, outer_thickness, height);
 		rims(outer_radius, rim_width, rim_height, height);
@@ -73,11 +74,14 @@ module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter,
 
 module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius) {
 	padding = 1;
+	small_padding = 0.1;
 	servo_outer_radius = 18;
 
 	lego_piece_height = 15.6;
 	lego_piece_size = 4.72;
 	lego_piece_size_new = 4.85;
+
+	servohead_screw_height = 2;
 
 	radius = inner_radius + thickness;
 	height = tire_height + tableEntry(type, "headDiameter") + 0.5;
@@ -98,6 +102,25 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 					scale([(tire_height + padding * 2) / lego_piece_height, lego_piece_size_new / lego_piece_size, lego_piece_size_new / lego_piece_size]) {
 						import("LegoAxleSize2.stl");
 					}
+				}
+			}
+		}
+	} else if (type == "servohead") {
+		difference() {
+			cylinder(r=radius, h=tire_height, center=true);
+			translate([0, 0, tire_height / 2 + small_padding]) {
+				rotate([180, 0, 0]) {
+					servo_head(FUTABA_3F_SPLINE, SERVO_HEAD_CLEAR);
+				}
+			}
+			translate([0, 0, - FUTABA_3F_SPLINE[0][1] + tire_height / 2 + small_padding * 2]) {
+				rotate([180, 0, 0]) {
+					cylinder(r=FUTABA_3F_SPLINE[0][3] / 2, h=servohead_screw_height + small_padding * 2);
+				}
+			}
+			translate([0, 0, - FUTABA_3F_SPLINE[0][1] + tire_height / 2 - servohead_screw_height + small_padding]) {
+				rotate([180, 0, 0]) {
+					cylinder(r=FUTABA_3F_SPLINE[0][0] / 2, h=tire_height - FUTABA_3F_SPLINE[0][1] - servohead_screw_height + small_padding * 2);
 				}
 			}
 		}
@@ -340,5 +363,107 @@ module bolt(size, length) {
 module donutSlice3D(innerSize, outerSize, start_angle, end_angle, height) {
 	linear_extrude(height=height, convexity=10) {
 		donutSlice(innerSize, outerSize, start_angle, end_angle);
+	}
+}
+
+/**
+ *  Parts taken from:
+ *
+ *  Parametric servo arm generator for OpenScad
+ *
+ *  Copyright (c) 2012 Charles Rincheval.  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ *  Last update :
+ *  https://github.com/hugokernel/OpenSCAD_ServoArms
+ *
+ *  http://www.digitalspirit.org/
+ */
+
+/**
+ *  Head / Tooth parameters
+ *  Futaba 3F Standard Spline
+ *  http://www.servocity.com/html/futaba_servo_splines.html
+ *
+ *  First array (head related) :
+ *  0. Head external diameter
+ *  1. Head heigth
+ *  2. Head thickness
+ *  3. Head screw diameter
+ *
+ *  Second array (tooth related) :
+ *  0. Tooth count
+ *  1. Tooth height
+ *  2. Tooth length
+ *  3. Tooth width
+ */
+FUTABA_3F_SPLINE = [
+    [5.92, 4, 1.1, 2.5],
+    [25, 0.3, 0.7, 0.1]
+];
+
+/**
+ *  Clear between arm head and servo head
+ *  With PLA material, use clear : 0.3, for ABS, use 0.2
+ */
+SERVO_HEAD_CLEAR = 0.2;
+
+/**
+ *  Tooth
+ *
+ *    |<-w->|
+ *    |_____|___
+ *    /     \  ^h
+ *  _/       \_v
+ *   |<--l-->|
+ *
+ *  - tooth length (l)
+ *  - tooth width (w)
+ *  - tooth height (h)
+ *  - height
+ *
+ */
+module servo_head_tooth(length, width, height, head_height) {
+	linear_extrude(height = head_height) {
+		polygon([[-length / 2, 0], [-width / 2, height], [width / 2, height], [length / 2,0]]);
+	}
+}
+
+/**
+ *  Servo head
+ */
+module servo_head(params, clear) {
+	head = params[0];
+	tooth = params[1];
+
+	head_diameter = head[0];
+	head_heigth = head[1];
+
+	tooth_count = tooth[0];
+	tooth_height = tooth[1];
+	tooth_length = tooth[2];
+	tooth_width = tooth[3];
+
+	cylinder(r = head_diameter / 2 - tooth_height + 0.03 + clear, h = head_heigth);
+
+	for (i = [0 : tooth_count]) {
+		rotate([0, 0, i * (360 / tooth_count)]) {
+			translate([0, head_diameter / 2 - tooth_height + clear, 0]) {
+				servo_head_tooth(tooth_length, tooth_width, tooth_height, head_heigth);
+			}
+		}
 	}
 }

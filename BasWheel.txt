@@ -15,9 +15,224 @@ Servo wheel 4.0 http://www.thingiverse.com/thing:19940
 C-Spot Robot http://www.thingiverse.com/thing:38073
 
 jinx: "I NEVER GONNA BUY ANOTHER WHEEL" from now on, thx to your work
+hoff70: bas, this is a cool part! hoff70: THANKS!
 
 
 notes:
 outer_thickness 1 rim_width .7 spoke_count 9 spoke_thickness .9
 detachable servohub
 holes in the outer ring
+with teeth for track
+option rim (up/down)
+the teeth on the wheel are straight as are the teeth on the inside of the track, only the tread need to be angled
+
+
+Setting:
+-- BasWheel1 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "M3"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel2 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "M3"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left_double"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel3 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "servo"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 4;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 0;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel4 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "servo"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 0;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel5 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "lego"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel6 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "M3"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spring"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel7 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "no"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel8 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "servo"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 4;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel9 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "servo"; // (servo, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel10 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "servohead"; // (servo, servohead, lego, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
