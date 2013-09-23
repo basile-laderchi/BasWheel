@@ -2,11 +2,11 @@ BasWheel [![Project Status](http://stillmaintained.com/basile-laderchi/BasWheel.
 ========
 LEGO Technic axle compatibility tested out ok by Gareth Chiprobot (http://letsmakerobots.com/user/2941, http://www.thingiverse.com/Chiprobot).
 
-Ideas from http://www.thingiverse.com/thing:21486, http://www.thingiverse.com/thing:17514 and http://www.thingiverse.com/thing:5713
+Ideas from http://www.thingiverse.com/thing:21486, http://www.thingiverse.com/thing:17514 and http://www.thingiverse.com/thing:5713  
 The servohead cutout is based on http://www.thingiverse.com/thing:28566
 
 The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (not included)  
-The Lego axle size 2 (http://www.thingiverse.com/thing:66884) is needed. (not included)
+The Lego axle size 2 (http://www.thingiverse.com/thing:66884) is needed. (not included)  
 The Parametric servo arms (http://www.thingiverse.com/thing:28566) is not needed. (code parts included)
 
 v 1.15, 18 Sep 2013 : Added hub\_type "servohead"  
