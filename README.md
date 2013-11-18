@@ -9,6 +9,7 @@ The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (n
 The Lego axle size 2 (http://www.thingiverse.com/thing:66884) is needed. (not included)  
 The Parametric servo arms (http://www.thingiverse.com/thing:28566) is not needed. (code parts included)
 
+v 1.16, 18 Nov 2013 : Added hub\_type "stepper"  
 v 1.15, 18 Sep 2013 : Added hub\_type "servohead"  
 v 1.14, 23 July 2013 : Added magnet\_diameter (used if you need holes for neodymium magnets on the servo\_hub) and magnet\_offset parameters  
 v 1.13, 18 July 2013 : Added hub\_type "no" used for push-fit axles  

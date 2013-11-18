@@ -15,16 +15,21 @@ Servo wheel 4.0 http://www.thingiverse.com/thing:19940
 C-Spot Robot http://www.thingiverse.com/thing:38073
 
 jinx: "I NEVER GONNA BUY ANOTHER WHEEL" from now on, thx to your work
+jinx: I doubt I,ll ever buy another set off wheels thx to basile good work
+erco: Beautiful bot and video, Jinx! Great work on many fronts. Wireless, 3D printing, and I love those fabulous spiral spoked wheels. Be proud!
 hoff70: bas, this is a cool part! hoff70: THANKS!
+Gareth: wheels looking v.cool mr.b
 
 
 notes:
 outer_thickness 1 rim_width .7 spoke_count 9 spoke_thickness .9
-detachable servohub
+
+ideas:
 holes in the outer ring
 with teeth for track
-option rim (up/down)
 the teeth on the wheel are straight as are the teeth on the inside of the track, only the tread need to be angled
+option rim (up/down)
+http://www.thingiverse.com/thing:151379 (parameteric as usual. radius of the axle, of the cuts and of the screw.)
 
 
 Setting:
@@ -227,6 +232,32 @@ hub_thickness = 5;
 servo_hub_extra_height = 2;
 servo_hole_count = 6;
 servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 6;
+rim_width = 1;
+rim_height = 1;
+spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_count = 6;
+spoke_thickness = 1;
+spoke_support = 25; // (angle between 5 an 85 degrees)
+spring_segments = 6;
+
+
+-- BasWheel11 --
+outer_diameter = 60;
+outer_thickness = 1;
+wheel_height = 10;
+hub_type = "stepper"; // (servo, servohead, lego, stepper, no, screw_size)
+hub_diameter = 5;
+hub_thickness = 5;
+servo_hub_extra_height = 2;
+servo_hole_count = 6;
+servo_attachment_height = 2;
+stepper_axle_height = 6;
+stepper_axle_OD = 5;
+stepper_axle_ID = 3;
+stepper_screw_OD = 5;
+stepper_screw_ID = 3;
 magnet_offset = 3;
 magnet_diameter = 6;
 rim_width = 1;

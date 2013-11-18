@@ -1,12 +1,17 @@
 outer_diameter = 60;
 outer_thickness = 1;
 wheel_height = 10;
-hub_type = "servohead"; // (servo, servohead, lego, no, screw_size)
+hub_type = "stepper"; // (servo, servohead, lego, stepper, no, screw_size)
 hub_diameter = 5;
 hub_thickness = 5;
 servo_hub_extra_height = 2;
 servo_hole_count = 6;
 servo_attachment_height = 2;
+stepper_axle_height = 6;
+stepper_axle_OD = 5;
+stepper_axle_ID = 3;
+stepper_screw_OD = 5;
+stepper_screw_ID = 3;
 magnet_offset = 3;
 magnet_diameter = 6;
 rim_width = 1;
@@ -19,12 +24,13 @@ spring_segments = 6;
 
 /*
  *
- * BasWheel v1.15
+ * BasWheel v1.16
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported http://creativecommons.org/licenses/by-sa/3.0/
  *
+ * v 1.16, 18 Nov 2013 : Added hub_type "stepper"
  * v 1.15, 18 Sep 2013 : Added hub_type "servohead"
  * v 1.14, 23 Jul 2013 : Added magnet_diameter (used if you need holes for neodymium magnets on the servo_hub) and magnet_offset parameters
  * v 1.13, 18 Jul 2013 : Added hub_type "no" used for push-fit axles
@@ -44,13 +50,13 @@ spring_segments = 6;
  *
  */
 
-basWheel(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
+basWheel(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
 
 use <Libs.scad> // http://www.thingiverse.com/thing:6021
 use <MCAD/triangles.scad>
 use <MCAD/2Dshapes.scad>
 
-module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
+module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
 	outer_radius = outer_diameter / 2;
 	hub_radius = hub_diameter / 2;
 	magnet_radius = magnet_diameter / 2;
@@ -61,10 +67,10 @@ module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter,
 
 	union() {
 		if (tableRow(hub_type) != -1) {
-			hub(hub_type, hub_radius, hub_screw_thickness, 0, servo_hole_count, servo_attachment_height, height, 0);
+			hub(hub_type, hub_radius, hub_screw_thickness, 0, servo_hole_count, servo_attachment_height, 0, 0, 0, 0, 0, height, 0, 0);
 			spokes(spoke_type, hub_screw_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
 		} else {
-			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, height, magnet_offset, magnet_radius);
+			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, height, magnet_offset, magnet_radius);
 			spokes(spoke_type, hub_other_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
 		}
 		ring(outer_radius, outer_thickness, height);
@@ -72,7 +78,7 @@ module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter,
 	}
 }
 
-module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius) {
+module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, tire_height, magnet_offset, magnet_radius) {
 	padding = 1;
 	small_padding = 0.1;
 	servo_outer_radius = 18;
@@ -82,6 +88,11 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 	lego_piece_size_new = 4.85;
 
 	servohead_screw_height = 2;
+
+	stepper_axle_outer_radius = stepper_axle_OD / 2;
+	stepper_screw_height = 2;
+	stepper_screw_outer_radius = stepper_screw_OD / 2;
+	stepper_screw_inner_radius = stepper_screw_ID / 2;
 
 	radius = inner_radius + thickness;
 	height = tire_height + tableEntry(type, "headDiameter") + 0.5;
@@ -93,17 +104,6 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 		union() {
 			ring(radius, thickness, tire_height);
 			servoHub(servo_outer_radius, radius, inner_radius, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius);
-		}
-	} else if (type == "lego") {
-		difference() {
-			cylinder(r=radius, h=tire_height, center=true);
-			rotate([0, 90, 0]) {
-				translate([-(tire_height + padding * 2) / 2, -lego_piece_size_new / 2, -lego_piece_size_new / 2]) {
-					scale([(tire_height + padding * 2) / lego_piece_height, lego_piece_size_new / lego_piece_size, lego_piece_size_new / lego_piece_size]) {
-						import("LegoAxleSize2.stl");
-					}
-				}
-			}
 		}
 	} else if (type == "servohead") {
 		difference() {
@@ -122,6 +122,33 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 				rotate([180, 0, 0]) {
 					cylinder(r=FUTABA_3F_SPLINE[0][0] / 2, h=tire_height - FUTABA_3F_SPLINE[0][1] - servohead_screw_height + small_padding * 2);
 				}
+			}
+		}
+	} else if (type == "lego") {
+		difference() {
+			cylinder(r=radius, h=tire_height, center=true);
+			rotate([0, 90, 0]) {
+				translate([-(tire_height + padding * 2) / 2, -lego_piece_size_new / 2, -lego_piece_size_new / 2]) {
+					scale([(tire_height + padding * 2) / lego_piece_height, lego_piece_size_new / lego_piece_size, lego_piece_size_new / lego_piece_size]) {
+						import("LegoAxleSize2.stl");
+					}
+				}
+			}
+		}
+	} else if (type == "stepper") {
+		difference() {
+			cylinder(r=radius, h=tire_height, center=true);
+			translate([0, 0, (tire_height - stepper_axle_height + small_padding) / 2]) {
+				intersection() {
+					cylinder(r=stepper_axle_outer_radius, h=stepper_axle_height + small_padding, center=true);
+					cube(size=[stepper_axle_OD + small_padding, stepper_axle_ID, stepper_axle_height + small_padding], center=true);
+				}
+			}
+			translate([0, 0, - (tire_height - stepper_axle_height + small_padding / 2) / 2]) {
+				cylinder(r=stepper_screw_inner_radius, h=stepper_screw_height + small_padding, center=true);
+			}
+			translate([0, 0, - (stepper_axle_height + stepper_screw_height + small_padding) / 2]) {
+				cylinder(r=stepper_screw_outer_radius, h=tire_height - stepper_axle_height - 2 + small_padding, center=true);
 			}
 		}
 	} else if (type == "no") {
