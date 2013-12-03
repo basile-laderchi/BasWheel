@@ -1,38 +1,46 @@
-outer_diameter = 60;
-outer_thickness = 1;
-wheel_height = 10;
-hub_type = "hubattachment"; // (servo, servohead, lego, stepper, hubattachment, no, screw_size)
-hub_diameter = 5;
-hub_thickness = 5;
-servo_hub_extra_height = 2;
-servo_hole_count = 6;
-servo_attachment_height = 2;
-stepper_axle_height = 6;
-stepper_axle_OD = 5;
-stepper_axle_ID = 3;
-stepper_screw_OD = 5;
-stepper_screw_ID = 3;
-slot_OD = 10;
-slot_height = 2;
-magnet_offset = 3;
-magnet_diameter = 6;
-rim_width = 1;
-rim_height = 1;
-spoke_type = "spiral_left"; // (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
-spoke_count = 6;
-spoke_thickness = 1;
-spoke_support = 25; // (angle between 5 an 85 degrees)
-spring_segments = 6;
+outer_diameter = 60;  // outer diameter of the wheel
+outer_thickness = 1;  // outer thicknes of the wheel
+wheel_height = 10;  // height of the wheel
+
+// define hubtype to be used. Options are (servo, servohead, lego, stepper, hubattachment, no, screw_size)
+// screw_size options are: "M2", "M2.5", "M3", "M4", "M5", "M6", "M8", "#8", "1/4 Hex", "5/16 Hex" (as per Libs.scad)
+hub_type = "hubattachment";
+
+hub_diameter = 5;  // diameter of the hub
+hub_thickness = 5;  // thickness of the hub
+servo_hub_extra_height = 2;  // used with "servo" hub_type. Extra height of the servo hub
+servo_hole_count = 6;  // used with "servo" hub_type. How many screw hole will the servo hub have
+servo_attachment_height = 2;  // used with "servo" hub_type. Height of the servo hub base
+stepper_axle_height = 6;  // used with "stepper" hub_type. Height of the stepper axle
+stepper_axle_OD = 5;  // used with "stepper" hub_type. Outer diameter of the stepper axle
+stepper_axle_ID = 3;  // used with "stepper" hub_type. Inner diameter of the stepper axle
+stepper_screw_OD = 5;  // used with "stepper" hub_type. Outer diameter of the screw
+stepper_screw_ID = 3;  // used with "stepper" hub_type. Inner diameter of the screw
+slot_OD = 10;  // used with "hubattachment" hub_type. Outer diameter of the screw slot (attachment to BasHub)
+magnet_offset = 3;  // used with "servo" hub_type. Distance of the magnet holes from the outside
+magnet_diameter = 6;  // used with "servo" hub_type. Magnet's diameter
+rim_width = 1;  // outer rim width
+rim_height = 1;  // outer rim height
+
+// define spoketype to be used. Options are (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+spoke_type = "spiral_left";
+
+spoke_count = 6;  // number of spokes
+spoke_thickness = 1;  // spoke thickness
+spoke_support = 25;  // spoke's attachment support to the wheel in degrees (between 5 an 85)
+spring_segments = 6;  // used with "spring" spoke_type. Number of segment a spring will have
 
 /*
  *
- * BasWheel v1.17
+ * BasWheel v1.19
  *
  * by Basile Laderchi
  *
- * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported http://creativecommons.org/licenses/by-nc-sa/3.0/
+ * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
- * v 1.17, 20 Nov 2013 : Changed license and added hub_type "hubattachment"
+ * v 1.19, 29 Nov 2013 : Changed license from BY-NC-SA v3 to BY-NC-SA v4.0 and added comments to parameters
+ * v 1.18, 26 Nov 2013 : Removed parameter slot_height
+ * v 1.17, 20 Nov 2013 : Changed license from BY-SA to BY-NC-SA and added hub_type "hubattachment"
  * v 1.16, 18 Nov 2013 : Added hub_type "stepper" (built to match stepper type 28BYJ-48)
  * v 1.15, 18 Sep 2013 : Added hub_type "servohead"
  * v 1.14, 23 Jul 2013 : Added magnet_diameter (used if you need holes for neodymium magnets on the servo_hub) and magnet_offset parameters
@@ -53,13 +61,13 @@ spring_segments = 6;
  *
  */
 
-basWheel(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, slot_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
+basWheel(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
 
 use <Libs.scad> // http://www.thingiverse.com/thing:6021
 use <MCAD/triangles.scad>
 use <MCAD/2Dshapes.scad>
 
-module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, slot_height, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
+module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
 	outer_radius = outer_diameter / 2;
 	hub_radius = hub_diameter / 2;
 	magnet_radius = magnet_diameter / 2;
@@ -73,7 +81,7 @@ module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter,
 			hub(hub_type, hub_radius, hub_screw_thickness, 0, servo_hole_count, servo_attachment_height, 0, 0, 0, 0, 0, 0, 0, height, 0, 0);
 			spokes(spoke_type, hub_screw_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
 		} else {
-			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, slot_height, height, magnet_offset, magnet_radius);
+			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, height, magnet_offset, magnet_radius);
 			spokes(spoke_type, hub_other_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
 		}
 		ring(outer_radius, outer_thickness, height);
@@ -81,7 +89,7 @@ module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter,
 	}
 }
 
-module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, slot_height, tire_height, magnet_offset, magnet_radius) {
+module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, tire_height, magnet_offset, magnet_radius) {
 	padding = 1;
 	small_padding = 0.1;
 	servo_outer_radius = 18;
@@ -98,6 +106,7 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 	stepper_screw_inner_radius = stepper_screw_ID / 2;
 
 	slot_radius = slot_OD / 2;
+	slot_height = tire_height / 2;
 
 	radius = inner_radius + thickness;
 	height = tire_height + tableEntry(type, "headDiameter") + 0.5;

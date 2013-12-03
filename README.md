@@ -9,7 +9,9 @@ The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (n
 The Lego axle size 2 (http://www.thingiverse.com/thing:66884) is needed. (not included)  
 The Parametric servo arms (http://www.thingiverse.com/thing:28566) is not needed. (code parts included)
 
-v 1.17, 20 Nov 2013 : Changed license and added hub\_type "hubattachment"  
+v 1.19, 29 Nov 2013 : Changed license from BY-NC-SA v3 to BY-NC-SA v4.0 and added comments to parameters  
+v 1.18, 26 Nov 2013 : Removed parameter slot\_height  
+v 1.17, 20 Nov 2013 : Changed license from BY-SA to BY-NC-SA and added hub\_type "hubattachment"  
 v 1.16, 18 Nov 2013 : Added hub\_type "stepper" (built to match stepper type 28BYJ-48)  
 v 1.15, 18 Sep 2013 : Added hub\_type "servohead"  
 v 1.14, 23 July 2013 : Added magnet\_diameter (used if you need holes for neodymium magnets on the servo\_hub) and magnet\_offset parameters  
