@@ -2,11 +2,11 @@ outer_diameter = 60;  // outer diameter of the wheel
 outer_thickness = 1;  // outer thicknes of the wheel
 wheel_height = 10;  // height of the wheel
 
-// define hubtype to be used. Options are (servo, servohead, lego, stepper, hubattachment, no, screw_size)
+// define hubtype to be used. Options are (servo, servohead, lego, legoturntable, stepper, hubattachment, no, screw_size)
 // screw_size options are: "M2", "M2.5", "M3", "M4", "M5", "M6", "M8", "#8", "1/4 Hex", "5/16 Hex" (as per Libs.scad)
-hub_type = "hubattachment";
+hub_type = "legoturntable";
 
-hub_diameter = 5;  // diameter of the hub
+hub_diameter = 10;  // diameter of the hub
 hub_thickness = 5;  // thickness of the hub
 servo_hub_extra_height = 2;  // used with "servo" hub_type. Extra height of the servo hub
 servo_hole_count = 6;  // used with "servo" hub_type. How many screw hole will the servo hub have
@@ -32,15 +32,16 @@ spring_segments = 6;  // used with "spring" spoke_type. Number of segment a spri
 
 /*
  *
- * BasWheel v1.19
+ * BasWheel v1.20
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
- * v 1.19, 29 Nov 2013 : Changed license from BY-NC-SA v3 to BY-NC-SA v4.0 and added comments to parameters
+ * v 1.20, 24 Dec 2013 : Added hub_type "legoturntable"
+ * v 1.19, 29 Nov 2013 : Changed license from CC BY-NC-SA 3.0 to CC BY-NC-SA 4.0 and added comments to parameters
  * v 1.18, 26 Nov 2013 : Removed parameter slot_height
- * v 1.17, 20 Nov 2013 : Changed license from BY-SA to BY-NC-SA and added hub_type "hubattachment"
+ * v 1.17, 20 Nov 2013 : Changed license from CC BY-SA 3.0 to CC BY-NC-SA 3.0 and added hub_type "hubattachment"
  * v 1.16, 18 Nov 2013 : Added hub_type "stepper" (built to match stepper type 28BYJ-48)
  * v 1.15, 18 Sep 2013 : Added hub_type "servohead"
  * v 1.14, 23 Jul 2013 : Added magnet_diameter (used if you need holes for neodymium magnets on the servo_hub) and magnet_offset parameters
@@ -94,9 +95,11 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 	small_padding = 0.1;
 	servo_outer_radius = 18;
 
-	lego_piece_height = 15.6;
-	lego_piece_size = 4.72;
-	lego_piece_size_new = 4.85;
+	lego_piece_axlefile_height = 15.6;
+	lego_piece_axlefile_size = 4.72;
+	lego_piece_height_big = 1.85;
+	lego_piece_size_small = 4.75;
+	lego_piece_size_big = 4.85;
 
 	servohead_screw_height = 2;
 
@@ -105,14 +108,15 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 	stepper_screw_outer_radius = stepper_screw_OD / 2;
 	stepper_screw_inner_radius = stepper_screw_ID / 2;
 
-	slot_radius = slot_OD / 2;
-	slot_height = tire_height / 2;
-
 	radius = inner_radius + thickness;
 	height = tire_height + tableEntry(type, "headDiameter") + 0.5;
-	hole_z = (height - tire_height) / 2 + tire_height / 2;
+	half_tire_height = tire_height / 2;
+	hole_z = (height - tire_height) / 2 + half_tire_height;
 	upper_nut_z = (height - tire_height) / 2 + hole_z;
 	nut_x = radius - thickness + 0.5;
+
+	slot_radius = slot_OD / 2;
+	slot_height = half_tire_height;
 
 	if (type == "servo") {
 		union() {
@@ -122,17 +126,17 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 	} else if (type == "servohead") {
 		difference() {
 			cylinder(r=radius, h=tire_height, center=true);
-			translate([0, 0, tire_height / 2 + small_padding]) {
+			translate([0, 0, half_tire_height + small_padding]) {
 				rotate([180, 0, 0]) {
 					servo_head(FUTABA_3F_SPLINE, SERVO_HEAD_CLEAR);
 				}
 			}
-			translate([0, 0, - FUTABA_3F_SPLINE[0][1] + tire_height / 2 + small_padding * 2]) {
+			translate([0, 0, - FUTABA_3F_SPLINE[0][1] + half_tire_height + small_padding * 2]) {
 				rotate([180, 0, 0]) {
 					cylinder(r=FUTABA_3F_SPLINE[0][3] / 2, h=servohead_screw_height + small_padding * 2);
 				}
 			}
-			translate([0, 0, - FUTABA_3F_SPLINE[0][1] + tire_height / 2 - servohead_screw_height + small_padding]) {
+			translate([0, 0, - FUTABA_3F_SPLINE[0][1] + half_tire_height - servohead_screw_height + small_padding]) {
 				rotate([180, 0, 0]) {
 					cylinder(r=FUTABA_3F_SPLINE[0][0] / 2, h=tire_height - FUTABA_3F_SPLINE[0][1] - servohead_screw_height + small_padding * 2);
 				}
@@ -142,11 +146,21 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 		difference() {
 			cylinder(r=radius, h=tire_height, center=true);
 			rotate([0, 90, 0]) {
-				translate([-(tire_height + padding * 2) / 2, -lego_piece_size_new / 2, -lego_piece_size_new / 2]) {
-					scale([(tire_height + padding * 2) / lego_piece_height, lego_piece_size_new / lego_piece_size, lego_piece_size_new / lego_piece_size]) {
+				translate([-(tire_height + padding * 2) / 2, -lego_piece_size_big / 2, -lego_piece_size_big / 2]) {
+					scale([(tire_height + padding * 2) / lego_piece_axlefile_height, lego_piece_size_big / lego_piece_axlefile_size, lego_piece_size_big / lego_piece_axlefile_size]) {
 						import("LegoAxleSize2.stl");
 					}
 				}
+			}
+		}
+	} else if (type == "legoturntable") {
+		difference() {
+			cylinder(r=radius, h=tire_height, center=true);
+			translate([0, 0, half_tire_height - lego_piece_height_big]) {
+				translate([4, 4, 0]) cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
+				translate([4, -4, 0]) cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
+				translate([-4, 4, 0]) cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
+				translate([-4, -4, 0]) cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
 			}
 		}
 	} else if (type == "stepper") {
