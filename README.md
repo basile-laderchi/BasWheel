@@ -9,6 +9,7 @@ The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (n
 The Lego axle size 2 (http://www.thingiverse.com/thing:66884) is needed. (not included)  
 The Parametric servo arms (http://www.thingiverse.com/thing:28566) is not needed. (code parts included)
 
+v 1.21,  2 Jan 2014 : Added parameters servo\_hole\_ID and servo\_hole\_OD  
 v 1.20, 24 Dec 2013 : Added hub\_type "legoturntable"  
 v 1.19, 29 Nov 2013 : Changed license from CC BY-NC-SA 3.0 to CC BY-NC-SA 4.0 and added comments to parameters  
 v 1.18, 26 Nov 2013 : Removed parameter slot\_height  
