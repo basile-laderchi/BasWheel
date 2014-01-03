@@ -1,10 +1,11 @@
 outer_diameter = 60;  // outer diameter of the wheel
 outer_thickness = 1;  // outer thicknes of the wheel
 wheel_height = 10;  // height of the wheel
+wheel_extra_height = 10;  // extra height of the wheel
 
 // define hubtype to be used. Options are (servo, servohead, lego, legoturntable, stepper, hubattachment, no, screw_size)
 // screw_size options are: "M2", "M2.5", "M3", "M4", "M5", "M6", "M8", "#8", "1/4 Hex", "5/16 Hex" (as per Libs.scad)
-hub_type = "servo";
+hub_type = "M3";
 
 hub_diameter = 5;  // diameter of the hub
 hub_thickness = 5;  // thickness of the hub
@@ -34,12 +35,13 @@ spring_segments = 6;  // used with "spring" spoke_type. Number of segment a spri
 
 /*
  *
- * BasWheel v1.21
+ * BasWheel v1.22
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
+ * v 1.22,  3 Jan 2014 : Added parameter wheel_extra_height
  * v 1.21,  2 Jan 2014 : Added parameters servo_hole_ID and servo_hole_OD
  * v 1.20, 24 Dec 2013 : Added hub_type "legoturntable"
  * v 1.19, 29 Nov 2013 : Changed license from CC BY-NC-SA 3.0 to CC BY-NC-SA 4.0 and added comments to parameters
@@ -65,13 +67,13 @@ spring_segments = 6;  // used with "spring" spoke_type. Number of segment a spri
  *
  */
 
-basWheel(outer_diameter, outer_thickness, wheel_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
+basWheel(outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, $fn=100);
 
 use <Libs.scad> // http://www.thingiverse.com/thing:6021
 use <MCAD/triangles.scad>
 use <MCAD/2Dshapes.scad>
 
-module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
+module basWheel(outer_diameter, outer_thickness, height, extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments) {
 	outer_radius = outer_diameter / 2;
 	hub_radius = hub_diameter / 2;
 	magnet_radius = magnet_diameter / 2;
@@ -81,15 +83,23 @@ module basWheel(outer_diameter, outer_thickness, height, hub_type, hub_diameter,
 	spoke_outer_radius = outer_radius - max((outer_thickness - spoke_thickness), 0);
 
 	union() {
-		if (tableRow(hub_type) != -1) {
-			hub(hub_type, hub_radius, hub_screw_thickness, 0, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, 0, 0, 0, 0, 0, 0, 0, height, 0, 0);
-			spokes(spoke_type, hub_screw_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
-		} else {
+		assign (hub_thickness = (tableRow(hub_type) != -1) ? hub_screw_thickness : hub_thickness,
+						servo_hub_extra_height = (tableRow(hub_type) != -1) ? 0 : servo_hub_extra_height,
+						stepper_axle_height = (tableRow(hub_type) != -1) ? 0 : stepper_axle_height,
+						stepper_axle_OD = (tableRow(hub_type) != -1) ? 0 : stepper_axle_OD,
+						stepper_axle_ID = (tableRow(hub_type) != -1) ? 0 : stepper_axle_ID,
+						stepper_screw_OD = (tableRow(hub_type) != -1) ? 0 : stepper_screw_OD,
+						stepper_screw_ID = (tableRow(hub_type) != -1) ? 0 : stepper_screw_ID,
+						slot_OD = (tableRow(hub_type) != -1) ? 0 : slot_OD,
+						magnet_offset = (tableRow(hub_type) != -1) ? 0 : magnet_offset,
+						magnet_radius = (tableRow(hub_type) != -1) ? 0 : magnet_radius) {
 			hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, height, magnet_offset, magnet_radius);
-			spokes(spoke_type, hub_other_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
 		}
-		ring(outer_radius, outer_thickness, height);
-		rims(outer_radius, rim_width, rim_height, height);
+		assign (hub_outer_radius = (tableRow(hub_type) != -1) ? hub_screw_outer_radius : hub_other_outer_radius) {
+			spokes(spoke_type, hub_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
+		}
+		wheelRing(outer_radius, outer_thickness, height, extra_height);
+		rims(outer_radius, rim_width, rim_height, height, extra_height);
 	}
 }
 
@@ -392,13 +402,24 @@ module spring(angle, segments, outer_radius, inner_radius, height) {
 	}
 }
 
-module rims(radius, width, height, tire_height) {
-	translate([0, 0, (tire_height - height) / 2]) {
+module wheelRing(outer_radius, outer_thickness, height, extra_height) {
+	ring_z = extra_height / 2;
+
+	translate([0, 0, ring_z]) {
+		ring(outer_radius, outer_thickness, height + extra_height);
+	}
+}
+
+module rims(radius, width, height, tire_height, extra_height) {
+	top_rim_z = (tire_height - height) / 2 + extra_height;
+	lower_rim_z = -(tire_height - height) / 2;
+
+	translate([0, 0, top_rim_z]) {
 		difference() {
 			rim(radius, width, height);
 		}
 	}
-	translate([0, 0, -(tire_height - height) / 2]) {
+	translate([0, 0, lower_rim_z]) {
 		rim(radius, width, height);
 	}
 }
