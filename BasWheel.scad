@@ -1,5 +1,5 @@
 outer_diameter = 60;  // outer diameter of the wheel
-outer_thickness = 1;  // outer thicknes of the wheel
+outer_thickness = 1;  // outer thickness of the wheel
 wheel_height = 10;  // height of the wheel
 wheel_extra_height = 10;  // extra height of the wheel
 
@@ -35,12 +35,13 @@ spring_segments = 6;  // used with "spring" spoke_type. Number of segment a spri
 
 /*
  *
- * BasWheel v1.22
+ * BasWheel v1.23
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
+ * v 1.23, 14 Jan 2014 : Fixed bug with parameter outer_thickness
  * v 1.22,  3 Jan 2014 : Added parameter wheel_extra_height
  * v 1.21,  2 Jan 2014 : Added parameters servo_hole_ID and servo_hole_OD
  * v 1.20, 24 Dec 2013 : Added hub_type "legoturntable"
@@ -289,12 +290,11 @@ module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness,
 	padding = 0.1;
 	double_spoke_spacing = 1;
 
-	ring_radius = outer_radius - tire_thickness;
-	ring_thickness = ring_radius - hub_radius + padding;
+	ring_thickness = outer_radius - hub_radius + padding;
 	spring_angle = 360 / count / 2;
 
 	intersection() {
-		ring(ring_radius, ring_thickness, height);
+		ring(outer_radius, ring_thickness, height);
 		for (i = [0 : count - 1]) {
 			rotate([0, 0, i * (360 / count)]) {
 				if (type == "spiral_left_double") {
