@@ -28,25 +28,27 @@ magnet_diameter = 0;  // used with "servo" hub_type. Magnet's diameter
 rim_width = 1;  // outer rim width
 rim_height = 1;  // outer rim height
 
-// define spoketype to be used. Options are (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring)
+// define spoketype to be used. Options are (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring, dxf)
 spoke_type = "spiral_left";
 
 spoke_count = 6;  // number of spokes
 spoke_thickness = 1;  // spoke thickness
 spoke_support = 25;  // spoke's attachment support to the wheel in degrees (between 5 an 85)
 spring_segments = 6;  // used with "spring" spoke_type. Number of segment a spring will have
+dxf_filename = "BasSpoke1.dxf";  // used with "dxf" spoke_type. Dxf filename to use as spoke
 
 // flip the tire for printing. Options are (0 - not flipped, 1 - flipped)
 flip_wheel = 0;
 
 /*
  *
- * BasWheel v1.24
+ * BasWheel v1.25
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
+ * v 1.25, 14 Mar 2014 : Added spoke_type "dxf" and parameter dxf_filename
  * v 1.24, 25 Feb 2014 : Added parameters tire_compatibility and flip_wheel
  * v 1.23, 14 Jan 2014 : Fixed bug with parameter outer_thickness
  * v 1.22,  3 Jan 2014 : Added parameter wheel_extra_height
@@ -75,13 +77,13 @@ flip_wheel = 0;
  *
  */
 
-basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, flip_wheel, $fn=100);
+basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, dxf_filename, flip_wheel, $fn=100);
 
 use <Libs.scad> // http://www.thingiverse.com/thing:6021
 use <MCAD/triangles.scad>
 use <MCAD/2Dshapes.scad>
 
-module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, flip_wheel) {
+module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, dxf_filename, flip_wheel) {
 	wheel_x_rotation = (flip_wheel == 0) ? 0 : 180;
 
 	outer_radius = (tire_compatibility == "pololu90") ? 40 : outer_diameter / 2;
@@ -110,7 +112,7 @@ module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_heigh
 				hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, height, magnet_offset, magnet_radius);
 			}
 			assign (hub_outer_radius = (tableRow(hub_type) != -1) ? hub_screw_outer_radius : hub_other_outer_radius) {
-				spokes(spoke_type, hub_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments);
+				spokes(spoke_type, hub_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments, dxf_filename);
 			}
 			wheelRing(outer_radius, outer_thickness, height, extra_height);
 			rims(tire_compatibility, outer_radius, rim_width, rim_height, height, extra_height);
@@ -300,12 +302,23 @@ module servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_cou
 	}
 }
 
-module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness, count, support, spring_segments) {
+module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness, count, support, spring_segments, dxf_filename) {
 	padding = 0.1;
 	double_spoke_spacing = 1;
 
+	half_height = height / 2;
 	ring_thickness = outer_radius - hub_radius + padding;
+	spoke_thickness = min(thickness, tire_thickness);
 	spring_angle = 360 / count / 2;
+
+	orig = dxf_cross(file=dxf_filename);
+
+	echo("Hub outer radius: ", hub_radius);
+	echo("Wheel inner radius: ", outer_radius - spoke_thickness);
+	echo("Spoke width: ", outer_radius - spoke_thickness - hub_radius);
+	if (type == "dxf") {
+		echo("DXF origin: ", orig);
+	}
 
 	intersection() {
 		ring(outer_radius, ring_thickness, height);
@@ -313,24 +326,30 @@ module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness,
 			rotate([0, 0, i * (360 / count)]) {
 				if (type == "spiral_left_double") {
 					translate([0, 0, (height + double_spoke_spacing) / 4]) {
-						spoke(outer_radius, hub_radius, min(thickness, tire_thickness), (height - double_spoke_spacing) / 2, support, true);
+						spoke(outer_radius, hub_radius, spoke_thickness, (height - double_spoke_spacing) / 2, support, true);
 					}
 					translate([0, 0, -(height + double_spoke_spacing) / 4]) {
-						spoke(outer_radius, hub_radius, min(thickness, tire_thickness), (height - double_spoke_spacing) / 2, support, false);
+						spoke(outer_radius, hub_radius, spoke_thickness, (height - double_spoke_spacing) / 2, support, false);
 					}
 				} else if (type == "spiral_right_double"){
 					translate([0, 0, (height + double_spoke_spacing) / 4]) {
-						spoke(outer_radius, hub_radius, min(thickness, tire_thickness), (height - double_spoke_spacing) / 2, support, false);
+						spoke(outer_radius, hub_radius, spoke_thickness, (height - double_spoke_spacing) / 2, support, false);
 					}
 					translate([0, 0, -(height + double_spoke_spacing) / 4]) {
-						spoke(outer_radius, hub_radius, min(thickness, tire_thickness), (height - double_spoke_spacing) / 2, support, true);
+						spoke(outer_radius, hub_radius, spoke_thickness, (height - double_spoke_spacing) / 2, support, true);
 					}
 				} else if (type == "spiral_right") {
-					spoke(outer_radius, hub_radius, min(thickness, tire_thickness), height, support, false);
+					spoke(outer_radius, hub_radius, spoke_thickness, height, support, false);
 				} else if (type == "spiral_left") {
-					spoke(outer_radius, hub_radius, min(thickness, tire_thickness), height, support, true);
+					spoke(outer_radius, hub_radius, spoke_thickness, height, support, true);
 				} else if (type == "spring") {
 					spring(spring_angle, spring_segments, outer_radius - tire_thickness, hub_radius, height);
+				} else if (type == "dxf") {
+					translate([-orig[0], -orig[1], -half_height]) {
+						linear_extrude(height=height, convexity=10) {
+							import(file=dxf_filename);
+						}
+					}
 				}
 			}
 		}
