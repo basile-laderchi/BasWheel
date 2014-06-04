@@ -6,7 +6,7 @@ outer_thickness = 1;  // outer thickness of the wheel
 wheel_height = 10;  // height of the wheel
 wheel_extra_height = 0;  // extra height of the wheel
 
-// define hubtype to be used. Options are (servo, servohead, lego, legoturntable, stepper, hubattachment, no, screw_size)
+// define hubtype to be used. Options are (servo, servohead, lego, legoturntable, stepper, hubattachment, no, hex, screw_size)
 // screw_size options are: "M2", "M2.5", "M3", "M4", "M5", "M6", "M8", "#8", "1/4 Hex", "5/16 Hex" (as per Libs.scad)
 hub_type = "M3";
 
@@ -23,6 +23,7 @@ stepper_axle_ID = 3;  // used with "stepper" hub_type. Inner diameter of the ste
 stepper_screw_OD = 5;  // used with "stepper" hub_type. Outer diameter of the screw
 stepper_screw_ID = 3;  // used with "stepper" hub_type. Inner diameter of the screw
 slot_OD = 10;  // used with "hubattachment" hub_type. Outer diameter of the screw slot (attachment to BasHub)
+hex_size = 5;  // used with "hex" hub_type. Size of the hex measured from side to side
 magnet_offset = 3;  // used with "servo" hub_type. Distance of the magnet holes from the outside
 magnet_diameter = 0;  // used with "servo" hub_type. Magnet's diameter
 rim_width = 1;  // outer rim width
@@ -42,12 +43,13 @@ flip_wheel = 0;
 
 /*
  *
- * BasWheel v1.25
+ * BasWheel v1.26
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
+ * v 1.26,  4 Jun 2014 : Added hub_type "hex" and parameter hex_size
  * v 1.25, 14 Mar 2014 : Added spoke_type "dxf" and parameter dxf_filename
  * v 1.24, 25 Feb 2014 : Added parameters tire_compatibility and flip_wheel
  * v 1.23, 14 Jan 2014 : Fixed bug with parameter outer_thickness
@@ -77,13 +79,13 @@ flip_wheel = 0;
  *
  */
 
-basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, dxf_filename, flip_wheel, $fn=100);
+basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, dxf_filename, flip_wheel, $fn=100);
 
 use <Libs.scad> // http://www.thingiverse.com/thing:6021
 use <MCAD/triangles.scad>
 use <MCAD/2Dshapes.scad>
 
-module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, dxf_filename, flip_wheel) {
+module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, magnet_offset, magnet_diameter, rim_width, rim_height, spoke_type, spoke_count, spoke_thickness, spoke_support, spring_segments, dxf_filename, flip_wheel) {
 	wheel_x_rotation = (flip_wheel == 0) ? 0 : 180;
 
 	outer_radius = (tire_compatibility == "pololu90") ? 40 : outer_diameter / 2;
@@ -109,7 +111,7 @@ module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_heigh
 							slot_OD = (tableRow(hub_type) != -1) ? 0 : slot_OD,
 							magnet_offset = (tableRow(hub_type) != -1) ? 0 : magnet_offset,
 							magnet_radius = (tableRow(hub_type) != -1) ? 0 : magnet_radius) {
-				hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, height, magnet_offset, magnet_radius);
+				hub(hub_type, hub_radius, hub_thickness, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, height, magnet_offset, magnet_radius);
 			}
 			assign (hub_outer_radius = (tableRow(hub_type) != -1) ? hub_screw_outer_radius : hub_other_outer_radius) {
 				spokes(spoke_type, hub_outer_radius, outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spring_segments, dxf_filename);
@@ -120,7 +122,7 @@ module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_heigh
 	}
 }
 
-module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, tire_height, magnet_offset, magnet_radius) {
+module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, tire_height, magnet_offset, magnet_radius) {
 	padding = 1;
 	small_padding = 0.1;
 	servo_outer_radius = 18;
@@ -144,6 +146,9 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 	hole_z = (height - tire_height) / 2 + half_tire_height;
 	upper_nut_z = (height - tire_height) / 2 + hole_z;
 	nut_x = radius - thickness + 0.5;
+
+	// Hexagon Dimensions: http://math.tutorvista.com/geometry/hexagon.html#hexagon-dimensions
+	hex_radius = hex_size / sqrt(3);
 
 	slot_radius = slot_OD / 2;
 	slot_height = half_tire_height;
@@ -218,6 +223,11 @@ module hub(type, inner_radius, thickness, servo_extra_height, servo_hole_count, 
 		}
 	} else if (type == "no") {
 		ring(radius, thickness, tire_height);
+	} else if (type == "hex") {
+		difference() {
+			cylinder(r=radius, h=tire_height, center=true);
+			cylinder(r=hex_radius, h=tire_height + small_padding, center=true, $fn=6);
+		}
 	} else if (tableRow(type) != -1) {
 		difference() {
 			union() {
