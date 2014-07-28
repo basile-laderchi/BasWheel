@@ -12,7 +12,7 @@ hub_type = "M3";
 
 hub_diameter = 5;  // diameter of the hub
 hub_thickness = 5;  // thickness of the hub
-hub_magnet_count = 2;  // used in the magnet_hub. How many magnets will the magnet_hub has
+hub_magnet_count = 0;  // used in the magnet_hub. How many magnets will the magnet_hub has
 hub_magnet_margin = 2;  // used in the magnet_hub. Margin that will exist between the magnet hole and the top or the spoke
 hub_magnet_diameter = 6;  // used in the magnet_hub. Magnet's diameter
 hub_magnet_height = 3;  // used in the magnet_hub. Magnet's height
