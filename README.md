@@ -9,6 +9,7 @@ The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (n
 The Lego axle size 2 (http://www.thingiverse.com/thing:66884) is needed. (not included)  
 The Parametric servo arms (http://www.thingiverse.com/thing:28566) is not needed. (code parts included)
 
+v 1.28, 28 Jul 2014 : Added parameter rim\_type  
 v 1.27, 18 Jun 2014 : Added parameters hex\_screw\_spacer, hex\_screw\_OD, hex\_screw\_ID, hex\_screwhole\_depth, hub\_magnet\_count, hub\_magnet\_margin, hub\_magnet\_diameter and hub\_magnet\_height  
 v 1.26,  4 Jun 2014 : Added hub\_type "hex" and parameter hex\_size  
 v 1.25, 14 Mar 2014 : Added spoke\_type "dxf" and parameter dxf\_filename  
