@@ -9,6 +9,7 @@ The OpenSCAD Parts Library (http://www.thingiverse.com/thing:6021) is needed. (n
 The Lego axle size 2 (http://www.thingiverse.com/thing:66884) is needed. (not included)  
 The Parametric servo arms (http://www.thingiverse.com/thing:28566) is not needed. (code parts included)
 
+v 2.01, 14 Jan 2015 : Added spoke\_type "Hankook\_NPT"  
 v 2.00,  9 Jan 2015 : Added tire\_compatibility "rc1\_10", added parameter rim\_dxf, changed parameter names from dxf\_filename to spoke\_dxf and from spring\_segments to spoke\_segments, added spoke\_type "Polaris\_TerrainArmor"  
 v 1.28, 28 Jul 2014 : Added parameter rim\_type  
 v 1.27, 18 Jun 2014 : Added parameters hex\_screw\_spacer, hex\_screw\_OD, hex\_screw\_ID, hex\_screwhole\_depth, hub\_magnet\_count, hub\_magnet\_margin, hub\_magnet\_diameter and hub\_magnet\_height  

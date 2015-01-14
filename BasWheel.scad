@@ -43,7 +43,7 @@ rim_height = 1;  // outer rim height
 rim_dxf = "";
 
 // define spoketype to be used. Options are (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring, dxf, Polaris_TerrainArmor)
-spoke_type = "Polaris_TerrainArmor";
+spoke_type = "Hankook_NPT";
 
 spoke_count = 16;  // number of spokes
 spoke_thickness = 1;  // spoke thickness
@@ -56,12 +56,13 @@ flip_wheel = 0;
 
 /*
  *
- * BasWheel v2.00
+ * BasWheel v2.01
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
+ * v 2.01, 14 Jan 2015 : Added spoke_type "Hankook_NPT"
  * v 2.00,  9 Jan 2015 : Added tire_compatibility "rc1_10", added parameter rim_dxf, changed parameter names from dxf_filename to spoke_dxf and from spring_segments to spoke_segments, added spoke_type "Polaris_TerrainArmor"
  * v 1.28, 28 Jul 2014 : Added parameter rim_type
  * v 1.27, 18 Jun 2014 : Added parameters hex_screw_spacer, hex_screw_OD, hex_screw_ID, hex_screwhole_depth, hub_magnet_count, hub_magnet_margin, hub_magnet_diameter and hub_magnet_height
@@ -95,7 +96,7 @@ flip_wheel = 0;
  *
  */
 
-version = "2.00";
+version = "2.01";
 
 basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, hub_magnet_count, hub_magnet_margin, hub_magnet_diameter, hub_magnet_height, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, hex_screw_spacer, hex_screw_OD, hex_screw_ID, hex_screwhole_depth, magnet_offset, magnet_diameter, rim_type, rim_width, rim_height, rim_dxf, spoke_type, spoke_count, spoke_thickness, spoke_support, spoke_segments, spoke_dxf, flip_wheel, $fn=100);
 
@@ -468,6 +469,8 @@ module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness,
     ring(outer_radius, ring_thickness, height);
     if (type == "Polaris_TerrainArmor") {
       spokePolarisTerrainArmor(hub_radius, tire_inner_radius, height, count, spoke_thickness, spoke_segments);
+    } else if (type == "Hankook_NPT") {
+      spokeHankookNPT(hub_radius, tire_inner_radius, height, count, spoke_thickness, spoke_segments);
     } else {
       for (i = [0 : 1 : count - 1]) {
         rotate([0, 0, i * (360 / count)]) {
@@ -560,9 +563,9 @@ module spokePolarisTerrainArmor(hub_radius, tire_inner_radius, height, count, th
   half_thickness = thickness / 2;
   half_height = height / 2;
   matrixST = [[1, 0, 0], [0, 2/sqrt(3), 0], [0.5, 0.5, 1]];
-  pointsOuterHex3 = pointsHexagonCalc(0.5 + half_thickness, 0, 60, matrixST);
-  pointsinnerHex3 = pointsHexagonCalc(0.5 - half_thickness, 0, 60, matrixST);
-  pointsLine3 = [[0 - half_thickness, 0.45, 1], [1 + half_thickness, 0.45, 1], [1 + half_thickness, 0.55, 1], [0 - half_thickness, 0.55, 1]];
+  pointsOuterHex = pointsHexagonCalc(0.5 + half_thickness, 0, 60, matrixST);
+  pointsinnerHex = pointsHexagonCalc(0.5 - half_thickness, 0, 60, matrixST);
+  pointsLine = [[0 - half_thickness, 0.45, 1], [1 + half_thickness, 0.45, 1], [1 + half_thickness, 0.55, 1], [0 - half_thickness, 0.55, 1]];
 
   translate([0, 0, -half_height])
     linear_extrude(height=height, convexity=10)
@@ -580,8 +583,8 @@ module spokePolarisTerrainArmor(hub_radius, tire_inner_radius, height, count, th
               y3 = sin(angle1) * ((section_radius * (j + 1)) + inner_radius);
 
               difference() {
-                polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsOuterHex3);
-                polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsinnerHex3);
+                polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsOuterHex);
+                polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsinnerHex);
               }
             }
           }
@@ -596,7 +599,67 @@ module spokePolarisTerrainArmor(hub_radius, tire_inner_radius, height, count, th
               x3 = cos(angle2) * ((section_radius * (j + 1)) + inner_radius);
               y3 = sin(angle2) * ((section_radius * (j + 1)) + inner_radius);
 
-              polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsLine3);
+              polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsLine);
+            }
+          }
+        }
+}
+
+module spokeHankookNPT(hub_radius, tire_inner_radius, height, count, thickness, segments) {
+  padding = 0.1;
+
+  inner_radius = hub_radius;
+  outer_radius = tire_inner_radius;
+  section_radius = (outer_radius - inner_radius) / segments;
+
+  angle = 360 / count;
+  angle2 = angle / 3;
+  angle1 = angle2 * 2;
+  thickness = thickness / section_radius;
+
+  half_thickness = thickness / 2;
+  half_height = height / 2;
+  matrixST = [[1, 0, 0], [0, 2/sqrt(3) + 0.1, 0], [0.5, 0.5, 1]];
+  pointsOuterHex = pointsHexagonCalc(0.5 + half_thickness, 0, 60, matrixST);
+  pointsinnerHex = pointsHexagonCalc(0.5 - half_thickness, 0, 60, matrixST);
+  pointsLine = [[0 - half_thickness + padding, 0.45, 1], [1 + half_thickness - padding, 0.45, 1], [1 + half_thickness - padding, 0.55, 1], [0 - half_thickness + padding, 0.55, 1]];
+  pointsLine2 = [[0 - half_thickness - (1 - pointsOuterHex[5][0]) - padding, -0.05, 1], [1 + half_thickness + pointsOuterHex[4][0] + padding, -0.05, 1], [1 + half_thickness + pointsOuterHex[4][0] + padding, 0.05, 1], [0 - half_thickness - (1 - pointsOuterHex[5][0]) - padding, 0.05, 1]];
+
+  pointsLeft = [pointsOuterHex[2], pointsOuterHex[3], pointsOuterHex[4], pointsinnerHex[4], pointsinnerHex[3], pointsinnerHex[2]];
+  pointsRight = [pointsOuterHex[5], pointsOuterHex[0], pointsOuterHex[1], pointsinnerHex[1], pointsinnerHex[0], pointsinnerHex[5]];
+
+  translate([0, 0, -half_height])
+    linear_extrude(height=height, convexity=10)
+      union()
+        for (i = [0 : 1 : count]) {
+          rotate([0, 0, angle * i]) {
+            for (j = [0 : 1 : segments - 1]) {
+              x0 = cos(angle1) * ((section_radius * j) + inner_radius);
+              y0 = sin(angle1) * ((section_radius * j) + inner_radius);
+              x1 = ((section_radius * j) + inner_radius);
+              y1 = 0;
+              x2 = ((section_radius * (j + 1)) + inner_radius);
+              y2 = 0;
+              x3 = cos(angle1) * ((section_radius * (j + 1)) + inner_radius);
+              y3 = sin(angle1) * ((section_radius * (j + 1)) + inner_radius);
+
+              polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsLeft);
+              polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsRight);
+              polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsLine);
+            }
+          }
+          rotate([0, 0, (angle * i) + angle1]) {
+            for (j = [0 : 1 : segments - 1]) {
+              x0 = cos(angle2) * ((section_radius * j) + inner_radius);
+              y0 = sin(angle2) * ((section_radius * j) + inner_radius);
+              x1 = ((section_radius * j) + inner_radius);
+              y1 = 0;
+              x2 = ((section_radius * (j + 1)) + inner_radius);
+              y2 = 0;
+              x3 = cos(angle2) * ((section_radius * (j + 1)) + inner_radius);
+              y3 = sin(angle2) * ((section_radius * (j + 1)) + inner_radius);
+
+              polygonPT(x0, y0, x1, y1, x2, y2, x3, y3, pointsLine2);
             }
           }
         }
