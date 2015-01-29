@@ -8,16 +8,16 @@ wheel_extra_height = 0;  // extra height of the wheel
 
 // define hubtype to be used. Options are (servo, servohead, lego, legoturntable, stepper, hubattachment, no, hex, screw_size)
 // screw_size options are: "M2", "M2.5", "M3", "M4", "M5", "M6", "M8", "#8", "1/4 Hex", "5/16 Hex" (as per Libs.scad)
-hub_type = "hubattachment";
+hub_type = "M3";
 
 hub_diameter = 5;  // diameter of the hub
-hub_thickness = 13;  // thickness of the hub
+hub_thickness = 5;  // thickness of the hub
 hub_magnet_count = 0;  // used in the magnet_hub. How many magnets will the magnet_hub has
 hub_magnet_margin = 2;  // used in the magnet_hub. Margin that will exist between the magnet hole and the top or the spoke
 hub_magnet_diameter = 6;  // used in the magnet_hub. Magnet's diameter
 hub_magnet_height = 3;  // used in the magnet_hub. Magnet's height
 servo_hub_extra_height = 2;  // used with "servo" hub_type. Extra height of the servo hub
-servo_hole_count = 4;  // used with "servo" hub_type. How many screw hole will the servo hub have
+servo_hole_count = 6;  // used with "servo" hub_type. How many screw hole will the servo hub have
 servo_hole_ID = 1.5;  // used with "servo" hub_type. Inner hole diameter
 servo_hole_OD = 1.5;  // used with "servo" hub_type. Outer hole diameter
 servo_attachment_height = 2;  // used with "servo" hub_type. Height of the servo hub base
@@ -33,7 +33,7 @@ hex_screw_OD = 6;  // used with "hex" hub_type. Outer diameter of the screw
 hex_screw_ID = 2;  // used with "hex" hub_type. Inner diameter of the screw
 hex_screwhole_depth = 2;  // used with "hex" hub_type. How deep will the hole for the screw be
 magnet_offset = 3;  // used with "servo" hub_type. Distance of the magnet holes from the outside
-magnet_diameter = 0;  // used with "servo" hub_type. Magnet's diameter
+magnet_diameter = 6;  // used with "servo" hub_type. Magnet's diameter
 
 // define rimtype to be used. Options are (both, top, bottom, middle, barrel)
 rim_type = "both";
@@ -42,13 +42,14 @@ rim_width = 1;  // outer rim width - only parameter used in "barrel" rim_type
 rim_height = 1;  // outer rim height
 rim_dxf = "";
 
-// define spoketype to be used. Options are (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring, dxf, Polaris_TerrainArmor)
-spoke_type = "Hankook_NPT";
+// define spoketype to be used. Options are (spiral_left_double, spiral_right_double, spiral_left, spiral_right, spring, segmented, dxf, Polaris_TerrainArmor, Hankook_NPT)
+spoke_type = "spiral_left";
 
-spoke_count = 16;  // number of spokes
+spoke_count = 6;  // number of spokes
 spoke_thickness = 1;  // spoke thickness
 spoke_support = 25;  // spoke's attachment support to the wheel in degrees (between 5 an 85)
-spoke_segments = 2;  // used with "spring" and "Polaris_TerrainArmor" spoke_type. Number of segment that the spoke will be devided into
+spoke_segments = 30;  // used with "spring" and "Polaris_TerrainArmor" spoke_type. Number of segment that the spoke will be devided into
+spoke_angle = 360; // used with the "segmented" spoke_type
 spoke_dxf = "BasSpoke1.dxf";  // used with "dxf" spoke_type. Dxf filename to use as spoke
 
 // flip the tire for printing. Options are (0 - not flipped, 1 - flipped)
@@ -56,12 +57,13 @@ flip_wheel = 0;
 
 /*
  *
- * BasWheel v2.01
+ * BasWheel v2.02
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
+ * v 2.02, 29 Jan 2015 : Added spoke_type "segmented" and parameter spoke_angle. Fixed a bug with rim_type "barrel"
  * v 2.01, 14 Jan 2015 : Added spoke_type "Hankook_NPT"
  * v 2.00,  9 Jan 2015 : Added tire_compatibility "rc1_10", added parameter rim_dxf, changed parameter names from dxf_filename to spoke_dxf and from spring_segments to spoke_segments, added spoke_type "Polaris_TerrainArmor"
  * v 1.28, 28 Jul 2014 : Added parameter rim_type
@@ -96,9 +98,9 @@ flip_wheel = 0;
  *
  */
 
-version = "2.01";
+version = "2.02";
 
-basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, hub_magnet_count, hub_magnet_margin, hub_magnet_diameter, hub_magnet_height, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, hex_screw_spacer, hex_screw_OD, hex_screw_ID, hex_screwhole_depth, magnet_offset, magnet_diameter, rim_type, rim_width, rim_height, rim_dxf, spoke_type, spoke_count, spoke_thickness, spoke_support, spoke_segments, spoke_dxf, flip_wheel, $fn=100);
+basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, hub_magnet_count, hub_magnet_margin, hub_magnet_diameter, hub_magnet_height, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, hex_screw_spacer, hex_screw_OD, hex_screw_ID, hex_screwhole_depth, magnet_offset, magnet_diameter, rim_type, rim_width, rim_height, rim_dxf, spoke_type, spoke_count, spoke_thickness, spoke_support, spoke_segments, spoke_angle, spoke_dxf, flip_wheel, $fn=100);
 
 use <Libs.scad> // http://www.thingiverse.com/thing:6021
 use <MCAD/triangles.scad>
@@ -113,7 +115,7 @@ COMPATIBILITY_POLOLU90 = [80, 0, 3.25, 6.5, 0];
 //                      0   1    2   3   4           5   6  7  8     9  10 11    12
 COMPATIBILITY_RC1_10 = [72, 1.5, 34, 50, "hex_poly", 18, 0, 0, 12.2, 4, 4, 10.6, "dxf"];
 
-module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, hub_magnet_count, hub_magnet_margin, hub_magnet_diameter, hub_magnet_height, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, hex_screw_spacer, hex_screw_OD, hex_screw_ID, hex_screwhole_depth, magnet_offset, magnet_diameter, rim_type, rim_width, rim_height, rim_dxf, spoke_type, spoke_count, spoke_thickness, spoke_support, spoke_segments, spoke_dxf, flip_wheel) {
+module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_height, wheel_extra_height, hub_type, hub_diameter, hub_thickness, hub_magnet_count, hub_magnet_margin, hub_magnet_diameter, hub_magnet_height, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, hex_screw_spacer, hex_screw_OD, hex_screw_ID, hex_screwhole_depth, magnet_offset, magnet_diameter, rim_type, rim_width, rim_height, rim_dxf, spoke_type, spoke_count, spoke_thickness, spoke_support, spoke_segments, spoke_angle, spoke_dxf, flip_wheel) {
   echo(str("<b>BasWheel v", version, "</b>"));
 
   padding = 1;
@@ -201,7 +203,7 @@ module basWheel(tire_compatibility, outer_diameter, outer_thickness, wheel_heigh
                                hub_other_outer_radius;
 
             hub(innervariable_hub_type, hub_radius, innervariable_hub_thickness, innervariable_hub_magnet_count, hub_magnet_margin, hub_magnet_diameter, hub_magnet_height, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, stepper_axle_height, stepper_axle_OD, stepper_axle_ID, stepper_screw_OD, stepper_screw_ID, slot_OD, hex_size, hex_height, innervariable_hex_screw_spacer, innervariable_hex_screw_OD, hex_screw_ID, innervariable_hex_screwhole_depth, height, inner_radius, servo_magnet_offset, servo_magnet_diameter);
-            spokes(spoke_type, hub_outer_radius, innervariable_outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spoke_segments, spoke_dxf);
+            spokes(spoke_type, hub_outer_radius, innervariable_outer_thickness, height, spoke_outer_radius, spoke_thickness, spoke_count, spoke_support, spoke_segments, spoke_angle, spoke_dxf);
           }
           // hub_poly cut on hub and spokes
           if (innervariable_hub_type == "hex_poly") {
@@ -314,10 +316,18 @@ module hub(type, inner_radius, thickness, magnet_count, magnet_margin, magnet_di
     difference() {
       cylinder(r=radius, h=tire_height, center=true);
       translate([0, 0, half_tire_height - lego_piece_height_big]) {
-        translate([4, 4, 0]) cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
-        translate([4, -4, 0]) cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
-        translate([-4, 4, 0]) cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
-        translate([-4, -4, 0]) cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
+        translate([4, 4, 0]) {
+          cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
+        }
+        translate([4, -4, 0]) {
+          cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
+        }
+        translate([-4, 4, 0]) {
+          cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
+        }
+        translate([-4, -4, 0]) {
+          cylinder(r=lego_piece_size_big / 2, h=lego_piece_height_big + small_padding);
+        }
       }
     }
   } else if (type == "stepper") {
@@ -350,21 +360,27 @@ module hub(type, inner_radius, thickness, magnet_count, magnet_margin, magnet_di
       difference() {
         difference() {
           cylinder(r=radius, h=tire_height + magnet_extra_height, center=true);
-          translate([0, 0, - (tire_height - hex_height) / 2 + hex_screw_spacer + hex_screwhole_depth - magnet_z])
+          translate([0, 0, - (tire_height - hex_height) / 2 + hex_screw_spacer + hex_screwhole_depth - magnet_z]) {
             cylinder(r=hex_radius, h=hex_height + small_padding, center=true, $fn=6);
-          translate([0, 0, - (tire_height - hex_screw_spacer) / 2 + hex_screwhole_depth - magnet_z])
+          }
+          translate([0, 0, - (tire_height - hex_screw_spacer) / 2 + hex_screwhole_depth - magnet_z]) {
             cylinder(r=hex_screw_inner_radius, h=hex_screw_spacer + small_padding, center=true);
+          }
           translate([0, 0, - (tire_height - hex_screwhole_depth) / 2 - magnet_z]) {
             if (type == "hex") {
               cylinder(r=hex_screw_radius, h=hex_screwhole_depth + small_padding, center=true);
             }
           }
         }
-        for (i = [0 : 1 : magnet_count - 1])
-          rotate([0, 0, i * 360 / magnet_count])
-            translate([magnet_offset_x, 0, half_tire_height])
-              rotate([0, 90, 0])
+        for (i = [0 : 1 : magnet_count - 1]) {
+          rotate([0, 0, i * 360 / magnet_count]) {
+            translate([magnet_offset_x, 0, half_tire_height]) {
+              rotate([0, 90, 0]) {
                 cylinder(r=magnet_radius, h=magnet_height, center=true);
+              }
+            }
+          }
+        }
       }
   } else if (tableRow(type) != -1) {
     difference() {
@@ -391,7 +407,7 @@ module hub(type, inner_radius, thickness, magnet_count, magnet_margin, magnet_di
 }
 
 module servoHub(outer_radius, radius, inner_radius, extra_height, hole_count, hole_ID, hole_OD, attachment_height, tire_height, magnet_offset, magnet_diameter) {
-  padding = 0.1;
+  small_padding = 0.1;
 
   magnet_radius = magnet_diameter / 2;
 
@@ -400,8 +416,8 @@ module servoHub(outer_radius, radius, inner_radius, extra_height, hole_count, ho
       servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, hole_ID, hole_OD, attachment_height, tire_height);
       for (i = [0 : 1 : hole_count - 1]) {
         rotate([0, 0, i * 360 / hole_count + (360 / hole_count / 2)]) {
-          translate([0, outer_radius - magnet_radius - magnet_offset, tire_height / 2 + extra_height - padding]) {
-            cylinder(r=magnet_radius, h=attachment_height + padding * 2);
+          translate([0, outer_radius - magnet_radius - magnet_offset, tire_height / 2 + extra_height - small_padding]) {
+            cylinder(r=magnet_radius, h=attachment_height + small_padding * 2);
           }
         }
       }
@@ -412,7 +428,7 @@ module servoHub(outer_radius, radius, inner_radius, extra_height, hole_count, ho
 }
 
 module servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, hole_ID, hole_OD, attachment_height, tire_height) {
-  padding = 0.1;
+  small_padding = 0.1;
 
   inner_hole_radius = hole_ID / 2;
   outer_hole_radius = hole_OD / 2;
@@ -428,17 +444,17 @@ module servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_cou
           cylinder(r=outer_radius, h=attachment_height);
         }
       }
-      translate([0, 0, -padding]) {
-        cylinder(r=inner_radius, h=attachment_height + extra_height + padding * 2);
+      translate([0, 0, -small_padding]) {
+        cylinder(r=inner_radius, h=attachment_height + extra_height + small_padding * 2);
       }
       for (i = [0 : 1 : hole_count - 1]) {
         rotate([0, 0, i * 360 / hole_count]) {
           hull() {
-            translate([0, inner_hole_y, -padding]) {
-              cylinder(r=inner_hole_radius, h=attachment_height + extra_height + padding * 2);
+            translate([0, inner_hole_y, -small_padding]) {
+              cylinder(r=inner_hole_radius, h=attachment_height + extra_height + small_padding * 2);
             }
-            translate([0, outer_hole_y, -padding]) {
-              cylinder(r=outer_hole_radius, h=attachment_height + extra_height + padding * 2);
+            translate([0, outer_hole_y, -small_padding]) {
+              cylinder(r=outer_hole_radius, h=attachment_height + extra_height + small_padding * 2);
             }
           }
         }
@@ -447,13 +463,13 @@ module servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_cou
   }
 }
 
-module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness, count, support, spoke_segments, dxf) {
-  padding = 0.1;
+module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness, count, support, segments, angle, dxf) {
+  small_padding = 0.1;
   double_spoke_spacing = 1;
 
   half_height = height / 2;
   tire_inner_radius = outer_radius - tire_thickness;
-  ring_thickness = outer_radius - hub_radius + padding;
+  ring_thickness = outer_radius - hub_radius + small_padding;
   spoke_thickness = min(thickness, tire_thickness);
   spring_angle = 360 / count / 2;
 
@@ -468,9 +484,9 @@ module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness,
   intersection() {
     ring(outer_radius, ring_thickness, height);
     if (type == "Polaris_TerrainArmor") {
-      spokePolarisTerrainArmor(hub_radius, tire_inner_radius, height, count, spoke_thickness, spoke_segments);
+      spokePolarisTerrainArmor(hub_radius, tire_inner_radius, height, count, spoke_thickness, segments);
     } else if (type == "Hankook_NPT") {
-      spokeHankookNPT(hub_radius, tire_inner_radius, height, count, spoke_thickness, spoke_segments);
+      spokeHankookNPT(hub_radius, tire_inner_radius, height, count, spoke_thickness, segments);
     } else {
       for (i = [0 : 1 : count - 1]) {
         rotate([0, 0, i * (360 / count)]) {
@@ -493,7 +509,9 @@ module spokes(type, hub_radius, tire_thickness, height, outer_radius, thickness,
           } else if (type == "spiral_left") {
             spoke(outer_radius, hub_radius, spoke_thickness, height, support, true);
           } else if (type == "spring") {
-            spring(spring_angle, spoke_segments, outer_radius - tire_thickness, hub_radius, height);
+            spoke_spring(spring_angle, segments, tire_inner_radius, hub_radius, height);
+          } else if (type == "segmented") {
+            spoke_segmented(segments, angle, tire_inner_radius, hub_radius, spoke_thickness, height, outer_radius, support);
           } else if (type == "dxf") {
             orig = dxf_cross(file=dxf);
             translate([-orig[0], -orig[1], -half_height]) {
@@ -567,9 +585,9 @@ module spokePolarisTerrainArmor(hub_radius, tire_inner_radius, height, count, th
   pointsinnerHex = pointsHexagonCalc(0.5 - half_thickness, 0, 60, matrixST);
   pointsLine = [[0 - half_thickness, 0.45, 1], [1 + half_thickness, 0.45, 1], [1 + half_thickness, 0.55, 1], [0 - half_thickness, 0.55, 1]];
 
-  translate([0, 0, -half_height])
-    linear_extrude(height=height, convexity=10)
-      union()
+  translate([0, 0, -half_height]) {
+    linear_extrude(height=height, convexity=10) {
+      union() {
         for (i = [0 : 1 : count]) {
           rotate([0, 0, angle * i]) {
             for (j = [0 : 1 : segments - 1]) {
@@ -603,10 +621,13 @@ module spokePolarisTerrainArmor(hub_radius, tire_inner_radius, height, count, th
             }
           }
         }
+      }
+    }
+  }
 }
 
 module spokeHankookNPT(hub_radius, tire_inner_radius, height, count, thickness, segments) {
-  padding = 0.1;
+  small_padding = 0.1;
 
   inner_radius = hub_radius;
   outer_radius = tire_inner_radius;
@@ -622,15 +643,15 @@ module spokeHankookNPT(hub_radius, tire_inner_radius, height, count, thickness, 
   matrixST = [[1, 0, 0], [0, 2/sqrt(3) + 0.1, 0], [0.5, 0.5, 1]];
   pointsOuterHex = pointsHexagonCalc(0.5 + half_thickness, 0, 60, matrixST);
   pointsinnerHex = pointsHexagonCalc(0.5 - half_thickness, 0, 60, matrixST);
-  pointsLine = [[0 - half_thickness + padding, 0.45, 1], [1 + half_thickness - padding, 0.45, 1], [1 + half_thickness - padding, 0.55, 1], [0 - half_thickness + padding, 0.55, 1]];
-  pointsLine2 = [[0 - half_thickness - (1 - pointsOuterHex[5][0]) - padding, -0.05, 1], [1 + half_thickness + pointsOuterHex[4][0] + padding, -0.05, 1], [1 + half_thickness + pointsOuterHex[4][0] + padding, 0.05, 1], [0 - half_thickness - (1 - pointsOuterHex[5][0]) - padding, 0.05, 1]];
+  pointsLine = [[0 - half_thickness + small_padding, 0.45, 1], [1 + half_thickness - small_padding, 0.45, 1], [1 + half_thickness - small_padding, 0.55, 1], [0 - half_thickness + small_padding, 0.55, 1]];
+  pointsLine2 = [[0 - half_thickness - (1 - pointsOuterHex[5][0]) - small_padding, -0.05, 1], [1 + half_thickness + pointsOuterHex[4][0] + small_padding, -0.05, 1], [1 + half_thickness + pointsOuterHex[4][0] + small_padding, 0.05, 1], [0 - half_thickness - (1 - pointsOuterHex[5][0]) - small_padding, 0.05, 1]];
 
   pointsLeft = [pointsOuterHex[2], pointsOuterHex[3], pointsOuterHex[4], pointsinnerHex[4], pointsinnerHex[3], pointsinnerHex[2]];
   pointsRight = [pointsOuterHex[5], pointsOuterHex[0], pointsOuterHex[1], pointsinnerHex[1], pointsinnerHex[0], pointsinnerHex[5]];
 
-  translate([0, 0, -half_height])
-    linear_extrude(height=height, convexity=10)
-      union()
+  translate([0, 0, -half_height]) {
+    linear_extrude(height=height, convexity=10) {
+      union() {
         for (i = [0 : 1 : count]) {
           rotate([0, 0, angle * i]) {
             for (j = [0 : 1 : segments - 1]) {
@@ -663,9 +684,70 @@ module spokeHankookNPT(hub_radius, tire_inner_radius, height, count, thickness, 
             }
           }
         }
+      }
+    }
+  }
 }
 
-module spring(angle, segments, outer_radius, inner_radius, height) {
+module spoke_segmented(segments, angle, outer_radius, inner_radius, thickness, height, tire_outer_radius, support) {
+  padding = 1;
+
+  innervariable_inner_radius = inner_radius - thickness / 2;
+  innervariable_outer_radius = outer_radius + thickness / 2;
+
+  segment_radius = (innervariable_outer_radius - innervariable_inner_radius) / segments;
+  support_radius = (tire_outer_radius + innervariable_inner_radius) / 2;
+
+  union() {
+    for (i = [0 : 1 : segments - 1]) {
+      segment_radius_current = innervariable_inner_radius + (segment_radius * i);
+      segment_radius_next = innervariable_inner_radius + (segment_radius * (i + 1));
+      hull() {
+        rotate([0, 0, (angle / segments * i)]) {
+          translate([segment_radius_current, 0, 0]) {
+            cylinder(r=thickness / 2, h=height, center=true);
+          }
+        }
+        rotate([0, 0, (angle / segments * (i + 1))]) {
+          translate([segment_radius_next, 0, 0]) {
+            cylinder(r=thickness / 2, h=height, center=true);
+          }
+        }
+      }
+    }
+    if (abs(angle) >= 70 && support >= 5 && support <= 85) {
+      difference() {
+        rotate([0, 0, -90 + angle]) {
+          translate([0, tire_outer_radius, -height / 2]) {
+            if (angle > 0) {
+              rotate([0, 0, -90]) {
+                a_triangle(support, tire_outer_radius, height);
+              }
+            } else if (angle < 0) {
+              mirror([1, 1, 0]) {
+                a_triangle(support, tire_outer_radius, height);
+              }
+            }
+          }
+        }
+        hull() {
+          cylinder(r=thickness / 2, h=height + padding, center=true);
+          for (i = [segments - 11 : 1 : segments]) {
+            segment_radius_current = innervariable_inner_radius + (segment_radius * i);
+            segment_radius_next = innervariable_inner_radius + (segment_radius * (i + 1));
+            rotate([0, 0, (angle / segments * i)]) {
+              translate([segment_radius_current - (thickness / 2), 0, 0]) {
+                cylinder(r=thickness / 2, h=height + padding, center=true);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+module spoke_spring(angle, segments, outer_radius, inner_radius, height) {
   spring_thickness = 1;
 
   half_angle = angle / 2;
@@ -742,6 +824,7 @@ module wheelRing(outer_radius, outer_thickness, height, extra_height) {
 module rims(tire_compatibility, radius, type, width, height, dxf, tire_height, extra_height) {
   padding = 1;
   half_padding = padding / 2;
+  tiny_padding = 0.01;
 
   half_height = height / 2;
 
@@ -800,13 +883,16 @@ module rims(tire_compatibility, radius, type, width, height, dxf, tire_height, e
     }
   } else if (type == "barrel") {
     rotate_extrude(convexity=10) {
-      translate([radius, half_extra_height, 0]) {
+      translate([radius - tiny_padding, half_extra_height, 0]) {
         difference() {
-          translate(cc)
+          translate(cc) {
             circle(r=cr, $fn=400);
-          mirror([1, 0, 0])
-            translate([0, -cr - half_padding, 0])
+          }
+          mirror([1, 0, 0]) {
+            translate([0, - cr - half_padding, 0]) {
               square((cr + padding) * 2);
+            }
+          }
         }
       }
     }
@@ -821,24 +907,24 @@ module rims(tire_compatibility, radius, type, width, height, dxf, tire_height, e
 }
 
 module rim(radius, width, height) {
-  padding = 0.1;
+  small_padding = 0.1;
 
   outer_radius = radius + width;
 
   difference() {
     cylinder(r=outer_radius, h=height, center=true);
-    cylinder(r=radius, h=height + padding, center=true);
+    cylinder(r=radius, h=height + small_padding, center=true);
   }
 }
 
 module ring(radius, thickness, height) {
-  padding = 0.1;
+  small_padding = 0.1;
 
   inner_radius = radius - thickness;
 
   difference() {
     cylinder(r=radius, h=height, center=true);
-    cylinder(r=inner_radius, h=height + padding, center=true);
+    cylinder(r=inner_radius, h=height + small_padding, center=true);
   }
 }
 
